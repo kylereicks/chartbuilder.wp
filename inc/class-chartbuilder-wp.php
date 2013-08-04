@@ -38,6 +38,7 @@ if(!class_exists('Chartbuilder_WP')){
       add_action('init', array($this, 'add_update_hook'));
       add_filter('media_upload_tabs', array($this, 'register_chartbuilder_wp_tab'));
       add_action('media_upload_chartbuilder_wp', array($this, 'chartbuilder_wp_tab_view'));
+      add_action('wp_enqueue_media', array($this, 'chartbuilder_wp_admin_scripts'));
     }
 
     public function register_chartbuilder_wp_tab($tabs){
@@ -47,6 +48,17 @@ if(!class_exists('Chartbuilder_WP')){
 
     public function chartbuilder_wp_tab_view(){
       include(CHARTBUILDER_WP_PATH . 'chartbuilder/index.php');
+?>
+      <script>
+      window.onload = function(){
+        parent.chartbuilderIframeLoaded();
+      }
+      </script>
+<?php
+    }
+
+    public function chartbuilder_wp_admin_scripts(){
+      wp_enqueue_script('chartbuilder-wp-image-upload', CHARTBUILDER_WP_URL . 'js/chartbuilder-wp-image-upload.js', array('jquery', 'underscore', 'backbone', 'plupload'), CHARTBUILDER_WP_VERSION, true);
     }
 
     public function add_update_hook(){
